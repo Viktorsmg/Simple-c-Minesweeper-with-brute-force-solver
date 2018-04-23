@@ -92,6 +92,8 @@ void genPlaceAir() {
 
 void genShuffle(int shuffleIters){
 
+	int i, j;
+
 	//Place a line of mines
 	for (i = 0; i < mines; i++) {
 		grid[i%gridx][i / gridx].hasMine = true;
