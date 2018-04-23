@@ -33,6 +33,7 @@ struct pos {
 vector< vector< tile > > grid;
 vector< pos > flags;
 
+/*
 pos placeMine() {//Note: This tends to make horizontally clustered mines and can have difficulty when the empty tiles are few,
 	//use shuffle-based method instead!
 	int x, y;
@@ -47,13 +48,15 @@ pos placeMine() {//Note: This tends to make horizontally clustered mines and can
 	grid[x][y].hasMine = true;
 	return pos(x, y);
 }
+*/
 
-void initializeGrid() {
+void initializeGrid(int shuffleIters) {
 	int i, j;
 	grid.resize(gridx);
 	for (i = 0; i < gridx; i++) {
 		grid[i].resize(gridy);
 	}
+	/*
 	pos mine;
 	for (i = 0; i < mines; i++) {
 		mine = placeMine();
@@ -63,7 +66,29 @@ void initializeGrid() {
 			}
 		}
 	}
+	*/
+	for (i = 0; i < mines; i++) {
+		grid[i%gridx][i / gridx].hasMine = true;
+	}
+	for (i = 0; i < shuffleIters; i++) {
+		// This method is faster than the 4xRand() one by ~11%!
+		int swap1 = rand() % (gridx*gridy), swap2 = rand() % (gridx*gridy);
+		swap(grid[swap1%gridx][swap1 / gridx], grid[swap2%gridx][swap2 / gridx]);
+		
+		//swap(grid[rand() % gridx][rand() % gridy], grid[rand() % gridx][rand() % gridy]); <-Slower!
+	}
 
+	for (i = 0; i < gridx; i++) {
+		for (j = 0; j < gridy; j++) {
+			if(grid[i][j].hasMine){
+				for(int k = 0; k < 8; k++){
+					if (inIntvl(shift[k][0] + i, 0, gridx - 1) && inIntvl(shift[k][1] + j, 0, gridy - 1)) {
+						grid[shift[k][0] + i][shift[k][1] + j].nearMines++;
+					}
+				}
+			}
+		}
+	}
 	return;
 }
 
@@ -109,7 +134,9 @@ void discoverAll() {
 int main(){
 	srand(5);
 	gridx = 10, gridy = 10, mines = 12;
-	initializeGrid();
+	clock_t timer = clock();
+	initializeGrid(100000);
+	cout << "Generation time: " << float(clock() - timer) / float(CLOCKS_PER_SEC)<<" seconds.\n";
 	printGrid();
 	cout << endl;
 	discover(5, 5);
