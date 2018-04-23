@@ -73,7 +73,7 @@ void initializeGrid(int shuffleIters) {
 	for (i = 0; i < shuffleIters; i++) {
 		// This method is faster than the 4xRand() one by ~11%!
 		int swap1 = rand() % (gridx*gridy), swap2 = rand() % (gridx*gridy);
-		swap(grid[swap1%gridx][swap1 / gridx], grid[swap2%gridx][swap2 / gridx]);
+		swap(grid[swap1 % gridx][swap1 / gridx], grid[swap2 % gridx][swap2 / gridx]);
 		
 		//swap(grid[rand() % gridx][rand() % gridy], grid[rand() % gridx][rand() % gridy]); <-Slower!
 	}
@@ -135,7 +135,7 @@ int main(){
 	srand(5);
 	gridx = 10, gridy = 10, mines = 12;
 	clock_t timer = clock();
-	initializeGrid(100000);
+	initializeGrid(100000);//Starts to get slow at ~1 000 000, takes ~1.6 secs
 	cout << "Generation time: " << float(clock() - timer) / float(CLOCKS_PER_SEC)<<" seconds.\n";
 	printGrid();
 	cout << endl;
