@@ -33,55 +33,84 @@ struct pos {
 vector< vector< tile > > grid;
 vector< pos > flags;
 
-/*
-pos placeMine() {//Note: This tends to make horizontally clustered mines and can have difficulty when the empty tiles are few,
-	//use shuffle-based method instead!
+
+pos placePos(bool placeType = 1) {// placeType - place mine(1) or air(0) IE what should hasMine be
+	//Do not use when the ratios are not in your favor! Like placing mines when there's very few empty spots, etc.
 	int x, y;
 	x = rand() % gridx; y = rand() % gridy;
-	if (grid[x][y].hasMine) {
-		while (grid[x][y].hasMine) {
-			x++;
-			if (x >= gridx) { x = 0; y++; }
-			if (y >= gridy) { y = 0; }
-		}
+	while (grid[x][y].hasMine == placeType) {
+		x = rand() % gridx; y = rand() % gridy;
 	}
-	grid[x][y].hasMine = true;
+	grid[x][y].hasMine = placeType;
 	return pos(x, y);
 }
-*/
 
-void initializeGrid(int shuffleIters) {
+
+void genPlaceMines(){
 	int i, j;
-	grid.resize(gridx);
-	for (i = 0; i < gridx; i++) {
-		grid[i].resize(gridy);
-	}
-	/*
 	pos mine;
 	for (i = 0; i < mines; i++) {
-		mine = placeMine();
+		mine = placePos(1);
 		for (j = 0; j < 8; j++) {
 			if (inIntvl(shift[j][0] + mine.x, 0, gridx - 1) && inIntvl(shift[j][1] + mine.y, 0, gridy - 1)) {
 				grid[shift[j][0] + mine.x][shift[j][1] + mine.y].nearMines++;
 			}
 		}
 	}
-	*/
+}
+
+void genPlaceAir() {
+	int i, j;
+
+	//Fill the grid with mines instead of air.
+	for (i = 0; i < gridx; i++) {
+		for (j = 0; j < gridy; j++) {
+			grid[i][j].hasMine = true;
+			if ((i == 0 || i == (gridx - 1)) && (j == 0 || j == (gridy - 1))) {//Is this a corner tile? They have only 3 near mines.
+				grid[i][j].nearMines = 3;//This is to remedy future reduction of mine counts when placing air.
+				continue;
+			}
+			if ((i == 0 || i == (gridx - 1)) || (j == 0 || j == (gridy - 1))) {//Edge tiles have 5 mines; we continued from the last if,
+				grid[i][j].nearMines = 5;//so it can't be that BOTH statements are true.
+				continue;
+			}
+			grid[i][j].nearMines = 9;
+		}
+	}
+
+	pos air;
+	int airs = gridx * gridy - mines;
+	for (i = 0; i < airs; i++) {
+		air = placePos(0);
+		for (j = 0; j < 8; j++) {
+			if (inIntvl(shift[j][0] + air.x, 0, gridx - 1) && inIntvl(shift[j][1] + air.y, 0, gridy - 1)) {
+				grid[shift[j][0] + air.x][shift[j][1] + air.y].nearMines--;
+			}
+		}
+	}
+}
+
+void genShuffle(int shuffleIters){
+
+	//Place a line of mines
 	for (i = 0; i < mines; i++) {
 		grid[i%gridx][i / gridx].hasMine = true;
 	}
+
+	//Shuffle
 	for (i = 0; i < shuffleIters; i++) {
 		// This method is faster than the 4xRand() one by ~11%!
 		int swap1 = rand() % (gridx*gridy), swap2 = rand() % (gridx*gridy);
 		swap(grid[swap1 % gridx][swap1 / gridx], grid[swap2 % gridx][swap2 / gridx]);
-		
+
 		//swap(grid[rand() % gridx][rand() % gridy], grid[rand() % gridx][rand() % gridy]); <-Slower!
 	}
 
+	//Add mine counts to tiles
 	for (i = 0; i < gridx; i++) {
 		for (j = 0; j < gridy; j++) {
-			if(grid[i][j].hasMine){
-				for(int k = 0; k < 8; k++){
+			if (grid[i][j].hasMine) {
+				for (int k = 0; k < 8; k++) {
 					if (inIntvl(shift[k][0] + i, 0, gridx - 1) && inIntvl(shift[k][1] + j, 0, gridy - 1)) {
 						grid[shift[k][0] + i][shift[k][1] + j].nearMines++;
 					}
@@ -89,6 +118,23 @@ void initializeGrid(int shuffleIters) {
 			}
 		}
 	}
+}
+
+void genPlaceEmpty() {
+
+
+}
+
+
+void initializeGrid(int shuffleIters) {
+	int i, j;
+	grid.resize(gridx);
+	for (i = 0; i < gridx; i++) {
+		grid[i].resize(gridy);
+	}
+	
+	genShuffle(shuffleIters);
+
 	return;
 }
 
