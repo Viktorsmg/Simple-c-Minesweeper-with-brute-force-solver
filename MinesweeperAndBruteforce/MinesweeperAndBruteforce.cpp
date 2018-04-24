@@ -16,7 +16,8 @@ int shift[8][2] = { //Instead of doing some awkward if()s for checks around curr
 	{0,1}, {0,-1}, {1,0}, {-1,0}, //direct neighbour shifts
 	{1,1}, {1,-1}, {-1,1}, {-1,-1} }; //diagonal neighbour shifts
 
-bool inIntvl(int num, int min, int max) {
+template<typename type>
+bool inIntvl(type num, type min, type max) {
 	return num >= min && num <= max;
 }
 
@@ -122,12 +123,6 @@ void genShuffle(int shuffleIters){
 	}
 }
 
-void genPlaceEmpty() {
-
-
-}
-
-
 void initializeGrid(int shuffleIters) {
 	int i, j;
 	grid.resize(gridx);
@@ -135,9 +130,11 @@ void initializeGrid(int shuffleIters) {
 		grid[i].resize(gridy);
 	}
 	
-	genShuffle(shuffleIters);
-
-	return;
+	float ratio = mines / (gridx*gridy);
+	if (!inIntvl(ratio, 0.0f, 1.0f)) return;
+	if (ratio < 0.3) { genPlaceMines(); return; }
+	if (ratio > 0.7) { genPlaceAir(); return; }
+	genShuffle(shuffleIters); return;
 }
 
 void printTile(tile t) {
