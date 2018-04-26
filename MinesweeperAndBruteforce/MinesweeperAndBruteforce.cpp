@@ -1,19 +1,26 @@
 // MinesweeperAndBruteforce.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
-#include <cstdio>
-#include <iostream>
-#include <vector>
+#include "stdafx.h"//MSVC required
+#include <cstdio>//Printf
+#include <iostream>//Cin and cout for easier IO
+#include <vector>//Vector arrays
 #include <cstdlib>
-#include <ctime>
+#include <ctime>//Mine seed and generation timer
+
+
+#include <windows.h> //Terminal clearing
+#include <conio.h> //_getch() - direct character fetching from windows terminal
+
+
+
 
 using namespace std;
 
 int gridx, gridy, mines;
 
 int shift[8][2] = { //Instead of doing some awkward if()s for checks around current coords, use a matrix for shifting them
-	{0,1}, {0,-1}, {1,0}, {-1,0}, //direct neighbour shifts
+	{0,1}, {0,-1}, {1,0}, {-1,0}, //Direct neighbour shifts: Right, left, down, up
 	{1,1}, {1,-1}, {-1,1}, {-1,-1} }; //diagonal neighbour shifts
 
 template<typename type>
@@ -25,6 +32,7 @@ struct tile {
 	bool hasMine=false, flagged=false, discovered=false;
 	int nearMines=0;
 };
+
 struct pos {
 	int x, y;
 	pos() { x = 0, y = 0; }
@@ -138,8 +146,8 @@ void initializeGrid(int shuffleIters) {
 }
 
 void printTile(tile t) {
+	if (t.flagged && !t.discovered) { cout << "!"; return; }
 	if (!t.discovered) { cout << "#"; return; }
-	if (t.flagged) { cout << "!"; return; }
 	if (t.hasMine) { cout << "@"; return; }
 	if (!t.nearMines) { cout << " "; return; }
 	cout << t.nearMines;
@@ -154,9 +162,29 @@ void printGrid() {
 	}
 }
 
-void placeFlag(int x, int y) {
-
+void printGrid(pos cursor) {
+	for (int i = 0; i < gridx; i++) {
+		for (int j = 0; j < gridy; j++) {
+			if (i == cursor.x && j == cursor.y) { cout << char(219); continue; };
+			printTile(grid[i][j]);
+		}
+		cout << endl;
+	}
 }
+
+bool placeFlag(int x, int y) {
+	if (grid[x][y].discovered) return false;
+	grid[x][y].flagged = !grid[x][y].flagged;
+	int i, j;
+	for (i = 0; i < gridx; i++) {
+		for (j = 0; j < gridx; j++) {
+			if (grid[i][j].flagged != grid[i][j].hasMine) return false;
+		}
+	}
+	return true;
+}
+
+bool placeFlag(pos xy) { return placeFlag(xy.x, xy.y); }
 
 void discover(int x, int y) {
 	grid[x][y].discovered = true;
@@ -168,6 +196,8 @@ void discover(int x, int y) {
 	}
 }
 
+void discover(pos xy) { discover(xy.x, xy.y); }
+
 void discoverAll() {
 	for (int i = 0; i < gridx; i++) {
 		for (int j = 0; j < gridy; j++) {
@@ -176,12 +206,78 @@ void discoverAll() {
 	}
 }
 
+void clearTerminal() {
+	system("cls");
+	/*
+	for (int i = 0; i < 30; i++) {
+		cout << endl;
+	}
+	*/
+}
+
+int interactiveMode() {
+	cout << "Interactive mode - use the w, a, s and d keys to move a cursor around, space to click and q to toggle flags!";
+
+	bool won=false;
+	pos cursor(gridx/2,gridy/2);
+	char action = 5;
+
+	while(!won){
+		printf("\n(%i)[%c]", int(action), action);
+		clearTerminal();
+		printGrid(cursor);
+		action = _getch();
+		switch (action) {
+			case 'w':
+			case 'W':
+				action = 3;
+				break;
+
+			case 's':
+			case 'S':
+				action = 2;
+				break;
+
+			case 'd':
+			case 'D':
+				action = 0;
+				break;
+
+			case 'a':
+			case 'A':
+				action = 1;
+				break;
+		}
+
+		if (inIntvl(int(action), 0, 3)) {
+			if (inIntvl(cursor.x + shift[action][0], 0, gridx - 1) && inIntvl(cursor.y + shift[action][1], 0, gridy - 1)) {
+				cursor.x += shift[action][0];
+				cursor.y += shift[action][1];
+			}
+			continue;
+		}
+
+		switch (action) {
+			case ' ':
+				discover(cursor);
+				if (grid[cursor.x][cursor.y].hasMine) return -1;
+				break;
+			case 'q':
+				won = placeFlag(cursor);
+				break;
+		}
+
+	}
+	return 1;
+}
+
 int main(){
 	srand(5);
 	gridx = 10, gridy = 10, mines = 12;
 	clock_t timer = clock();
 	initializeGrid(100000);//Starts to get slow at ~1 000 000, takes ~1.6 secs
-	cout << "Generation time: " << float(clock() - timer) / float(CLOCKS_PER_SEC)<<" seconds.\n";
+	cout << "Generation time: " << float(clock() - timer) / float(CLOCKS_PER_SEC) << " seconds.\n";
+	/*
 	printGrid();
 	cout << endl;
 	discover(5, 5);
@@ -189,6 +285,20 @@ int main(){
 	cout << endl;
 	discoverAll();
 	printGrid();
+	*/
+
+	int result = interactiveMode();
+	switch (result) {
+		case -1:
+			cout << "You lost!";
+			break;
+		case 1:
+			cout << "You won!";
+			break;
+		default:
+			cout << "Some sort of error has occured...";
+			break;
+	}
     return 0;
 }
 
