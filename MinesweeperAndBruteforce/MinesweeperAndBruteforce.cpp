@@ -162,11 +162,99 @@ void printGrid() {
 	}
 }
 
-void printGrid(pos cursor) {
+void printGridHighlight(pos cursor) {//Print grid with different char on cursor
 	for (int i = 0; i < gridx; i++) {
 		for (int j = 0; j < gridy; j++) {
 			if (i == cursor.x && j == cursor.y) { cout << char(219); continue; };
 			printTile(grid[i][j]);
+		}
+		cout << endl;
+	}
+}
+
+void printGridWarp(pos cursor) {//Print grid with warp around cursor
+	for (int i = 0; i < gridx; i++) {
+		for (int j = 0; j < gridy; j++) {
+			if (j == cursor.y) { cout << " "; }
+			printTile(grid[i][j]);
+			if (j == cursor.y) { cout << " "; }
+		}
+		if (i == cursor.x - 1 || i == cursor.x ) { cout << endl; }
+		cout << endl;
+	}
+}
+
+void printGridCrosshair(pos cursor) {//Print grid with a warp and crosshair around corsor
+	for (int i = 0; i < gridx; i++) {
+		for (int j = 0; j < gridy; j++) {
+			if (j == cursor.y) {
+				if (i == cursor.x) {
+					cout << "-";
+				}
+				if (i != cursor.x) {
+					cout << " ";
+				}
+			}
+			printTile(grid[i][j]);
+			if (j == cursor.y) {
+				if (i == cursor.x) {
+					cout << "-";
+				}
+				if (i != cursor.x) {
+					cout << " ";
+				}
+			}
+		}
+		if (i == cursor.x - 1 || i == cursor.x) { 
+			cout << endl;
+			for (int j = 0; j < gridy; j++) {
+				if (j == cursor.y + 1) { cout << "|"; break; }
+				else {
+					cout << " ";
+				}
+			}
+		}
+
+		cout << endl;
+	}
+}
+
+void printGridCrosshair2(pos cursor) {//Print grid with gaps around all tiles and crosshair around cursor
+
+	for (int i = 0; i < gridx; i++) {
+		for (int j = 0; j < gridy; j++) {
+			if (j == cursor.y) {
+				if (i == cursor.x) {
+					cout << "-";
+				}
+				if (i != cursor.x) {
+					cout << " ";
+				}
+			} else {
+				cout << " ";
+			}
+			printTile(grid[i][j]);
+			if (j == cursor.y) {
+				if (i == cursor.x) {
+					cout << "-";
+				}
+				if (i != cursor.x) {
+					cout << " ";
+				}
+			} else {
+				cout << " ";
+			}
+		}
+
+		cout << endl;
+		if (i == cursor.x - 1 || i == cursor.x) {
+			
+			for (int j = 0; j < gridy*3; j++) {
+				if (j == cursor.y*3 + 1) { cout << "|"; break; }
+				else {
+					cout << " ";
+				}
+			}
 		}
 		cout << endl;
 	}
@@ -225,7 +313,7 @@ int interactiveMode() {
 	while(!won){
 		printf("\n(%i)[%c]", int(action), action);
 		clearTerminal();
-		printGrid(cursor);
+		printGridCrosshair2(cursor);
 		action = _getch();
 		switch (action) {
 			case 'w':
