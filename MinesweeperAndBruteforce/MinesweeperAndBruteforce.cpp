@@ -500,35 +500,44 @@ int interactiveMode(int printMethod=0) {
 
 int main(){
 	srand(5);
-	gridx = 10, gridy = 10, mines = 80;
+	cout << "Enter grid dimensions: ";
+	cin >> gridx >> gridy;
+	cout << "Enter amount of mines: ";
+	cin >> mines;
 	clock_t timer = clock();
 	generateGrid(100000);//Starts to get slow at ~1 000 000, takes ~1.6 secs
-	cout << "Generation time: " << float(clock() - timer) / float(CLOCKS_PER_SEC) << " seconds.\n";
+	cout << "Grid generation time: " << float(clock() - timer) / float(CLOCKS_PER_SEC) << " seconds.\n";
+	cout << "User mode(1) or solver mode(0)?: ";
+	int mode;
+	cin >> mode;
 
-	discoverAll();
-	printGridCrosshair2(pos(5, 5));
-	cout << "\n\n\nShifted:\n";
+	if(mode == 2){
+		discoverAll();
+		printGridCrosshair2(pos(5, 5));
+		cout << "\n\n\nShifted:\n";
 
-	shiftGrid(pos(5, 5));
-	printGridCrosshair2(pos(5,5));
-	cout << endl;
-	
-
-	
-	/*
-	int result = interactiveMode();
-	switch (result) {
-		case -1:
-			cout << "You lost!";
-			break;
-		case 1:
-			cout << "You won!";
-			break;
-		default:
-			cout << "Some sort of error has occured...";
-			break;
+		shiftGrid(pos(5, 5));
+		printGridCrosshair2(pos(5,5));
+		cout << endl;
+		return 2;
 	}
-	*/
+	
+	if (mode == 1) {
+		int result = interactiveMode();
+		switch (result) {
+			case -1:
+				cout << "You lost!";
+				break;
+			case 1:
+				cout << "You won!";
+				break;
+			default:
+				cout << "Some sort of error has occured...";
+				break;
+		}
+		return 1;
+	}
+
 
 
     return 0;
