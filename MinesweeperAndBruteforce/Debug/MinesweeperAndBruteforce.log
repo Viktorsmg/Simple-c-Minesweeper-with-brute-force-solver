@@ -1,5 +1,5 @@
 ﻿  MinesweeperAndBruteforce.cpp
 c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(114): warning C4101: 'j': unreferenced local variable
-c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(149): warning C4101: 'j': unreferenced local variable
-c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(179): warning C4018: '<': signed/unsigned mismatch
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(171): warning C4101: 'j': unreferenced local variable
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(202): warning C4018: '<': signed/unsigned mismatch
   MinesweeperAndBruteforce.vcxproj -> C:\Users\Vikto\Documents\GitHub\Simple-C---Minesweeper-with-brute-force\Debug\MinesweeperAndBruteforce.exe

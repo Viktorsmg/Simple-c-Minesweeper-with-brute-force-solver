@@ -53,6 +53,7 @@ bool canShift(pos xy, int shiftID) {
 	return canShift(xy.x, xy.y, shiftID);
 }
 
+///<summary> Mod that works correctly with negative values.</summary>
 template<typename type>
 type modNeg(type a, type max) {
 	if (a >= 0) return a % max;
@@ -63,7 +64,7 @@ type modNeg(type a, type max) {
 
 
 template<typename type>
-type loopOverflow(type a, pair<type, type> minmax) {
+type loopOverflow(type a, pair<type, type> minmax) {///@TODO is [min,max), should be [min,max]
 	return minmax.first + modNeg((a), (minmax.second - minmax.first + 1));
 }
 
@@ -71,10 +72,9 @@ int loopOverflow(int a, pos minmax) {
 	return loopOverflow(a, make_pair(minmax.x, minmax.y));
 }
 
-
-pos placePos(bool placeType = 1) {// placeType - place mine(1) or air(0) IE what should hasMine be
-	//Do not use when the ratios are not in your favor! Like placing mines when there's very few empty spots, etc.
-	//Tries to place a mine/air and returns its location
+///<summary> Places a mine/air in a non-occupied location and returns that location. <para />
+///Do not use if the air/mine:total tile ratio is close to or higher than 0.5!</summary>
+pos placePos(bool placeType = 1) {
 	int x, y;
 	x = rand() % gridx; y = rand() % gridy;
 	while (grid[x][y].hasMine == placeType) {
@@ -84,7 +84,8 @@ pos placePos(bool placeType = 1) {// placeType - place mine(1) or air(0) IE what
 	return pos(x, y);
 }
 
-
+///<summary> Generates by placing mines in non-overlapping locations. <para />
+///Do not use if the amount of mines is close to or higher than half the amount of total tiles! It will be slow!</summary>
 void genPlaceMines(){
 	int i;
 	for (i = 0; i < mines; i++) {
@@ -92,6 +93,8 @@ void genPlaceMines(){
 	}
 }
 
+///<summary> Generates by placing air in non-overlapping locations. <para />
+///Do not use if the amount of airs is close to or higher than half the amount of total tiles! It will be slow!</summary>
 void genPlaceAir() {
 	int i, j;
 
@@ -109,6 +112,8 @@ void genPlaceAir() {
 	}
 }
 
+///<summary> Generates using shuffling - moves mines around. Can take a while, based on the iterations. <para />
+///For example, 1 000 000 iterations took 1.6 seconds.</summary>
 void genShuffle(int shuffleIters){
 
 	int i, j;
@@ -128,7 +133,16 @@ void genShuffle(int shuffleIters){
 	}
 }
 
+///<summary> Clears tile numeration.</summary>
+void clearTileNumeration() {
+	for (int i = 0; i < gridx; i++) {
+		for (int j = 0; j < gridy; j++) {
+			grid[i][j].nearMines = 0;
+		}
+	}
+}
 
+///<summary> Numerates (puts amount of near mines) all tiles.</summary>
 void numerateTiles() {
 	int i, j;
 	for (i = 0; i < gridx; i++) {
@@ -144,7 +158,22 @@ void numerateTiles() {
 	}
 }
 
+///<summary> Numerates all tiles, but the ones on the edges are aware of the mines on opposite edges.</summary>
+void numerateTiles_looping() {
 
+	int i, j;
+	for (i = 0; i < gridx; i++) {
+		for (j = 0; j < gridy; j++) {
+			if (grid[i][j].hasMine) {
+				for (int k = 0; k < 8; k++) {
+					grid[modNeg(shift[k][0] + i, gridx)][modNeg(shift[k][1] + j, gridy)].nearMines++;
+				}
+			}
+		}
+	}
+}
+
+///<summary> Resizes the grid and generates it using one of the three methods, based on the ratio of mines to airs. </summary>
 void generateGrid(int shuffleIters) {
 	int i, j;
 	grid.resize(gridx);
@@ -160,8 +189,9 @@ void generateGrid(int shuffleIters) {
 	return;
 }
 
-
 pos findEmptyTile(pos startPos = pos(gridx/2,gridy/2)) {//Search is BFS, to find the one closest to the intended pos
+	//Note: TILES NEED TO BE NUMERATED!
+	//Note2: Finds tile with lowest mine count before shifting
 	vector<pos> bfsl, oldBfsl;
 	int i, j;
 	vector< vector<bool> > explored;
@@ -178,7 +208,7 @@ pos findEmptyTile(pos startPos = pos(gridx/2,gridy/2)) {//Search is BFS, to find
 		bfsl.clear();
 		for (i = 0; i < oldBfsl.size(); i++) {
 			explored[oldBfsl[i].x][oldBfsl[i].y] = true;
-			if (grid[oldBfsl[i].x][oldBfsl[i].y].nearMines < grid[startPos.x][startPos.y].nearMines) {
+			if (grid[oldBfsl[i].x][oldBfsl[i].y].nearMines < grid[startPos.x][startPos.y].nearMines && !grid[oldBfsl[i].x][oldBfsl[i].y].hasMine) {
 				startPos = oldBfsl[i];
 			}
 			for (j = 0; j < 4; j++) {
@@ -191,12 +221,15 @@ pos findEmptyTile(pos startPos = pos(gridx/2,gridy/2)) {//Search is BFS, to find
 	return startPos;
 }
 
-void printGridCrosshair2(pos a);
+///<summary>
+///Shifts the grid around so that the cursor position always lands on a non-mined tile. <para />
+///The shifting is done to the tile with the least amount of mines around it when the field is wrapped (tiled).
+///</summary>
+void shiftGrid(pos cursor) {
+	clearTileNumeration();
+	numerateTiles_looping();
 
-void shiftGrid(pos cursor) {//Shifts the grid to the closest least-mined tile (faraway x > close x+1 mines)
-//under the crosshair.
 	pos shiftTo = findEmptyTile(cursor);
-	printf("ShiftTo: %i x; %i y\n", shiftTo.x, shiftTo.y);
 	shiftTo.x -= cursor.x;
 	shiftTo.y -= cursor.y;
 	int i, j;
@@ -214,8 +247,12 @@ void shiftGrid(pos cursor) {//Shifts the grid to the closest least-mined tile (f
 
 	grid = shiftedGrid;
 
+	clearTileNumeration();
+	numerateTiles();
+
 }
 
+///<summary> Prints a tile the way the user would see it. </summary>
 void printTile(tile t) {
 	if (t.flagged && !t.discovered) { cout << "!"; return; }
 	if (!t.discovered) { cout << "#"; return; }
@@ -224,6 +261,7 @@ void printTile(tile t) {
 	cout << t.nearMines;
 }
 
+///<summary> Prints the entire grid, using printTile. </summary>
 void printGrid() {
 	for (int i = 0; i < gridx; i++) {
 		for (int j = 0; j < gridy; j++) {
@@ -233,7 +271,8 @@ void printGrid() {
 	}
 }
 
-void printGridHighlight(pos cursor) {//Print grid with different char on cursor
+///<summary> Prints the grid with a 'highlight' (different char) under the cursor.</summary>
+void printGridHighlight(pos cursor) {
 	for (int i = 0; i < gridx; i++) {
 		for (int j = 0; j < gridy; j++) {
 			if (i == cursor.x && j == cursor.y) { cout << char(219); continue; };
@@ -243,7 +282,8 @@ void printGridHighlight(pos cursor) {//Print grid with different char on cursor
 	}
 }
 
-void printGridWarp(pos cursor) {//Print grid with warp around cursor
+///<summary> Prints the grid with warping around the cursor.</summary>
+void printGridWarp(pos cursor) {
 	for (int i = 0; i < gridx; i++) {
 		for (int j = 0; j < gridy; j++) {
 			if (j == cursor.y) { cout << " "; }
@@ -255,7 +295,8 @@ void printGridWarp(pos cursor) {//Print grid with warp around cursor
 	}
 }
 
-void printGridCrosshair(pos cursor) {//Print grid with a warp and crosshair around corsor
+///<summary> Prints the grid with warping and a crosshair around the cursor.</summary>
+void printGridCrosshair(pos cursor) {
 	for (int i = 0; i < gridx; i++) {
 		for (int j = 0; j < gridy; j++) {
 			if (j == cursor.y) {
@@ -290,7 +331,8 @@ void printGridCrosshair(pos cursor) {//Print grid with a warp and crosshair arou
 	}
 }
 
-void printGridCrosshair2(pos cursor) {//Print grid with gaps around all tiles and crosshair around cursor
+///<summary> Prints the grid spaced and with a crosshair around the cursor.</summary>
+void printGridCrosshair2(pos cursor) {
 
 	for (int i = 0; i < gridx; i++) {
 		for (int j = 0; j < gridy; j++) {
@@ -331,6 +373,7 @@ void printGridCrosshair2(pos cursor) {//Print grid with gaps around all tiles an
 	}
 }
 
+///<summary> Places a flag and tells you if you've won (placed all falgs correctly).</summary>
 bool placeFlag(int x, int y) {
 	if (grid[x][y].discovered) return false;
 	grid[x][y].flagged = !grid[x][y].flagged;
@@ -345,6 +388,7 @@ bool placeFlag(int x, int y) {
 
 bool placeFlag(pos xy) { return placeFlag(xy.x, xy.y); }
 
+///<summary> Like clicking - discovers tiles recursively, does not discover more if the tile is dangerous.</summary>
 void discover(int x, int y) {
 	grid[x][y].discovered = true;
 	if (grid[x][y].nearMines) { return; }
@@ -357,10 +401,20 @@ void discover(int x, int y) {
 
 void discover(pos xy) { discover(xy.x, xy.y); }
 
+///<summary> Makes all tiles discovered.</summary>
 void discoverAll() {
 	for (int i = 0; i < gridx; i++) {
 		for (int j = 0; j < gridy; j++) {
 			grid[i][j].discovered = true;
+		}
+	}
+}
+
+///<summary> Hides (undiscovers) all tiles. </summary>
+void hideAll() {
+	for (int i = 0; i < gridx; i++) {
+		for (int j = 0; j < gridy; j++) {
+			grid[i][j].discovered = false;
 		}
 	}
 }
@@ -374,17 +428,31 @@ void clearTerminal() {
 	*/
 }
 
-int interactiveMode() {
-	cout << "Interactive mode - use the w, a, s and d keys to move a cursor around, space to click and q to toggle flags!";
+///<summary> Lets the user play.</summary>
+///<param name="printMethod"> The method to use for printing the grid. (0 - crosshair2, 1 - highlight, 2 - warp, 3 - crosshair)</param>
+int interactiveMode(int printMethod=0) {
+	cout << "Interactive mode - use the w, a, s and d keys to move a cursor around, space to click and q to toggle flags!\nPress any key to start! ";
 
 	bool won=false;
 	pos cursor(gridx/2,gridy/2);
-	char action = 5;
+	char action = _getch();
 
 	while(!won){
-		printf("\n(%i)[%c]", int(action), action);
 		clearTerminal();
-		printGridCrosshair2(cursor);
+		switch(printMethod){
+			case 0:
+				printGridCrosshair2(cursor);
+				break;
+			case 1:
+				printGridHighlight(cursor);
+				break;
+			case 2:
+				printGridWarp(cursor);
+				break;
+			case 3:
+				printGridCrosshair(cursor);
+				break;
+		}
 		action = _getch();
 		switch (action) {
 			case 'w':
@@ -439,7 +507,7 @@ int main(){
 
 	discoverAll();
 	printGridCrosshair2(pos(5, 5));
-	cout << "\n\n\n";
+	cout << "\n\n\nShifted:\n";
 
 	shiftGrid(pos(5, 5));
 	printGridCrosshair2(pos(5,5));
