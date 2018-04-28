@@ -7,10 +7,11 @@
 #include <vector>//Vector arrays
 #include <cstdlib>
 #include <ctime>//Mine seed and generation timer
-
+#include <utility>
 
 #include <windows.h> //Terminal clearing
 #include <conio.h> //_getch() - direct character fetching from windows terminal
+
 
 
 
@@ -23,14 +24,10 @@ int shift[8][2] = { //Instead of doing some awkward if()s for checks around curr
 	{0,1}, {0,-1}, {1,0}, {-1,0}, //Direct neighbour shifts: Right, left, down, up
 	{1,1}, {1,-1}, {-1,1}, {-1,-1} }; //diagonal neighbour shifts
 
-template<typename type>
-bool inIntvl(type num, type min, type max) {
-	return num >= min && num <= max;
-}
 
 struct tile {
-	bool hasMine=false, flagged=false, discovered=false;
-	int nearMines=0;
+	bool hasMine = false, flagged = false, discovered = false;
+	int nearMines = 0;
 };
 
 struct pos {
@@ -43,8 +40,41 @@ vector< vector< tile > > grid;
 vector< pos > flags;
 
 
+template<typename type>
+bool inIntvl(type num, type min, type max) {
+	return num >= min && num <= max;
+}
+
+bool canShift(int x, int y, int shiftID) {
+	return inIntvl( x + shift[shiftID][0], 0, gridx-1 ) && inIntvl( y + shift[shiftID][1], 0, gridy-1 );
+}
+
+bool canShift(pos xy, int shiftID) {
+	return canShift(xy.x, xy.y, shiftID);
+}
+
+template<typename type>
+type modNeg(type a, type max) {
+	if (a >= 0) return a % max;
+	if (a<0 && a>-max) return max + a % max;
+	return max - 1 + (a + 1) % max;
+}
+
+
+
+template<typename type>
+type loopOverflow(type a, pair<type, type> minmax) {
+	return minmax.first + modNeg((a), (minmax.second - minmax.first + 1));
+}
+
+int loopOverflow(int a, pos minmax) {
+	return loopOverflow(a, make_pair(minmax.x, minmax.y));
+}
+
+
 pos placePos(bool placeType = 1) {// placeType - place mine(1) or air(0) IE what should hasMine be
 	//Do not use when the ratios are not in your favor! Like placing mines when there's very few empty spots, etc.
+	//Tries to place a mine/air and returns its location
 	int x, y;
 	x = rand() % gridx; y = rand() % gridy;
 	while (grid[x][y].hasMine == placeType) {
@@ -56,15 +86,9 @@ pos placePos(bool placeType = 1) {// placeType - place mine(1) or air(0) IE what
 
 
 void genPlaceMines(){
-	int i, j;
-	pos mine;
+	int i;
 	for (i = 0; i < mines; i++) {
-		mine = placePos(1);
-		for (j = 0; j < 8; j++) {
-			if (inIntvl(shift[j][0] + mine.x, 0, gridx - 1) && inIntvl(shift[j][1] + mine.y, 0, gridy - 1)) {
-				grid[shift[j][0] + mine.x][shift[j][1] + mine.y].nearMines++;
-			}
-		}
+		placePos(1);
 	}
 }
 
@@ -75,27 +99,13 @@ void genPlaceAir() {
 	for (i = 0; i < gridx; i++) {
 		for (j = 0; j < gridy; j++) {
 			grid[i][j].hasMine = true;
-			if ((i == 0 || i == (gridx - 1)) && (j == 0 || j == (gridy - 1))) {//Is this a corner tile? They have only 3 near mines.
-				grid[i][j].nearMines = 3;//This is to remedy future reduction of mine counts when placing air.
-				continue;
-			}
-			if ((i == 0 || i == (gridx - 1)) || (j == 0 || j == (gridy - 1))) {//Edge tiles have 5 mines; we continued from the last if,
-				grid[i][j].nearMines = 5;//so it can't be that BOTH statements are true.
-				continue;
-			}
-			grid[i][j].nearMines = 9;
 		}
 	}
-
-	pos air;
+	
+	//Calculate amount of and place airs.
 	int airs = gridx * gridy - mines;
 	for (i = 0; i < airs; i++) {
-		air = placePos(0);
-		for (j = 0; j < 8; j++) {
-			if (inIntvl(shift[j][0] + air.x, 0, gridx - 1) && inIntvl(shift[j][1] + air.y, 0, gridy - 1)) {
-				grid[shift[j][0] + air.x][shift[j][1] + air.y].nearMines--;
-			}
-		}
+		placePos(0);
 	}
 }
 
@@ -116,13 +126,16 @@ void genShuffle(int shuffleIters){
 
 		//swap(grid[rand() % gridx][rand() % gridy], grid[rand() % gridx][rand() % gridy]); <-Slower!
 	}
+}
 
-	//Add mine counts to tiles
+
+void numerateTiles() {
+	int i, j;
 	for (i = 0; i < gridx; i++) {
 		for (j = 0; j < gridy; j++) {
 			if (grid[i][j].hasMine) {
 				for (int k = 0; k < 8; k++) {
-					if (inIntvl(shift[k][0] + i, 0, gridx - 1) && inIntvl(shift[k][1] + j, 0, gridy - 1)) {
+					if (canShift(i,j,k)) {
 						grid[shift[k][0] + i][shift[k][1] + j].nearMines++;
 					}
 				}
@@ -131,18 +144,76 @@ void genShuffle(int shuffleIters){
 	}
 }
 
-void initializeGrid(int shuffleIters) {
+
+void generateGrid(int shuffleIters) {
 	int i, j;
 	grid.resize(gridx);
 	for (i = 0; i < gridx; i++) {
 		grid[i].resize(gridy);
 	}
 	
-	float ratio = mines / (gridx*gridy);
+	float ratio = float(mines) / float(gridx*gridy);
 	if (!inIntvl(ratio, 0.0f, 1.0f)) return;
-	if (ratio < 0.3) { genPlaceMines(); return; }
-	if (ratio > 0.7) { genPlaceAir(); return; }
-	genShuffle(shuffleIters); return;
+	if (ratio < 0.3) { genPlaceMines(); }
+	if (ratio > 0.7) { genPlaceAir(); }
+	if (ratio > 0.3 && ratio < 0.7) { genShuffle(shuffleIters); }
+	return;
+}
+
+
+pos findEmptyTile(pos startPos = pos(gridx/2,gridy/2)) {//Search is BFS, to find the one closest to the intended pos
+	vector<pos> bfsl, oldBfsl;
+	int i, j;
+	vector< vector<bool> > explored;
+	explored.resize(gridx);
+	for (i = 0; i < gridx; i++) {
+		explored[i].resize(gridy);
+		for (j = 0; j < gridy; j++) {
+			explored[i][j] = false;
+		}
+	}
+	bfsl.push_back(startPos);
+	while (!bfsl.empty()) {
+		oldBfsl = bfsl;
+		bfsl.clear();
+		for (i = 0; i < oldBfsl.size(); i++) {
+			explored[oldBfsl[i].x][oldBfsl[i].y] = true;
+			if (grid[oldBfsl[i].x][oldBfsl[i].y].nearMines < grid[startPos.x][startPos.y].nearMines) {
+				startPos = oldBfsl[i];
+			}
+			for (j = 0; j < 4; j++) {
+				if (canShift(oldBfsl[i], j) && !explored[oldBfsl[i].x+shift[j][0]][oldBfsl[i].y+shift[j][1]]) {
+					bfsl.push_back( pos(oldBfsl[i].x + shift[j][0], oldBfsl[i].y + shift[j][1]) );
+				}
+			}
+		}
+	}
+	return startPos;
+}
+
+void printGridCrosshair2(pos a);
+
+void shiftGrid(pos cursor) {//Shifts the grid to the closest least-mined tile (faraway x > close x+1 mines)
+//under the crosshair.
+	pos shiftTo = findEmptyTile(cursor);
+	printf("ShiftTo: %i x; %i y\n", shiftTo.x, shiftTo.y);
+	shiftTo.x -= cursor.x;
+	shiftTo.y -= cursor.y;
+	int i, j;
+	vector< vector< tile > > shiftedGrid;
+	shiftedGrid.resize(gridx);
+	for (i = 0; i < gridx; i++) {
+		shiftedGrid[i].resize(gridy);
+	}
+	for (i = 0; i < gridx; i++) {
+		for (j = 0; j < gridy; j++) {
+			shiftedGrid[i][j] = grid[modNeg(i + shiftTo.x,gridx)][modNeg(j + shiftTo.y,gridy)];
+		}
+
+	}
+
+	grid = shiftedGrid;
+
 }
 
 void printTile(tile t) {
@@ -361,20 +432,22 @@ int interactiveMode() {
 
 int main(){
 	srand(5);
-	gridx = 10, gridy = 10, mines = 12;
+	gridx = 10, gridy = 10, mines = 80;
 	clock_t timer = clock();
-	initializeGrid(100000);//Starts to get slow at ~1 000 000, takes ~1.6 secs
+	generateGrid(100000);//Starts to get slow at ~1 000 000, takes ~1.6 secs
 	cout << "Generation time: " << float(clock() - timer) / float(CLOCKS_PER_SEC) << " seconds.\n";
-	/*
-	printGrid();
-	cout << endl;
-	discover(5, 5);
-	printGrid();
-	cout << endl;
-	discoverAll();
-	printGrid();
-	*/
 
+	discoverAll();
+	printGridCrosshair2(pos(5, 5));
+	cout << "\n\n\n";
+
+	shiftGrid(pos(5, 5));
+	printGridCrosshair2(pos(5,5));
+	cout << endl;
+	
+
+	
+	/*
 	int result = interactiveMode();
 	switch (result) {
 		case -1:
@@ -387,6 +460,9 @@ int main(){
 			cout << "Some sort of error has occured...";
 			break;
 	}
+	*/
+
+
     return 0;
 }
 
