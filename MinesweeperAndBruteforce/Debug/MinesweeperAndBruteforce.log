@@ -1,5 +1,107 @@
 ﻿  MinesweeperAndBruteforce.cpp
-c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(114): warning C4101: 'j': unreferenced local variable
-c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(171): warning C4101: 'j': unreferenced local variable
-c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(202): warning C4018: '<': signed/unsigned mismatch
-  MinesweeperAndBruteforce.vcxproj -> C:\Users\Vikto\Documents\GitHub\Simple-C---Minesweeper-with-brute-force\Debug\MinesweeperAndBruteforce.exe
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(47): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(47): error C2672: 'inIntvl': no matching overloaded function found
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(47): error C2780: 'bool inIntvl(type,type,type)': expects 3 arguments - 2 provided
+  c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(42): note: see declaration of 'inIntvl'
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(47): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(77): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(77): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(78): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(78): error C2228: left of '.hasMine' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(79): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(79): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(81): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(81): error C2228: left of '.hasMine' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(89): error C2065: 'mines': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(100): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(101): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(102): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(102): error C2228: left of '.hasMine' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(107): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(107): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(107): error C2065: 'mines': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(120): error C2065: 'mines': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(121): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(121): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(121): error C2228: left of '.hasMine' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(127): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(127): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(128): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(128): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(128): error C2660: 'std::swap': function does not take 1 arguments
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(136): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(137): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(138): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(138): error C2228: left of '.nearMines' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(146): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(147): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(148): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(148): error C2228: left of '.hasMine' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(151): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(151): error C2228: left of '.nearMines' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(163): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(164): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(165): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(165): error C2228: left of '.hasMine' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(167): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(167): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(167): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(167): error C2228: left of '.nearMines' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(177): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(177): error C2228: left of '.resize' must have class/struct/union
+  c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(177): note: type is 'unknown-type'
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(177): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(178): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(179): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(179): error C2228: left of '.resize' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(179): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(182): error C2065: 'mines': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(182): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(182): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(190): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(190): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(196): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(197): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(198): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(199): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(207): warning C4018: '<': signed/unsigned mismatch
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(209): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(209): error C2228: left of '.nearMines' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(209): error C2228: left of '.hasMine' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(227): error C2660: 'clearTileNumeration': function does not take 1 arguments
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(228): error C2660: 'numerateTiles_looping': function does not take 1 arguments
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(264): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(265): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(266): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(274): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(275): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(277): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(285): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(286): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(288): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(298): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(299): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(308): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(320): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(335): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(336): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(347): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(363): error C2065: 'gridy': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(376): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(376): error C2228: left of '.discovered' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(377): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(377): error C2228: left of '.flagged' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(379): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(380): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(381): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(381): error C2228: left of '.flagged' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(381): error C2228: left of '.hasMine' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(391): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(391): error C2228: left of '.discovered' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(392): error C2065: 'grid': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(392): error C2228: left of '.nearMines' must have class/struct/union
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(394): error C2065: 'gridx': undeclared identifier
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(394): error C2672: 'inIntvl': no matching overloaded function found
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(394): error C2780: 'bool inIntvl(type,type,type)': expects 3 arguments - 2 provided
+  c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(42): note: see declaration of 'inIntvl'
+c:\users\vikto\documents\github\simple-c---minesweeper-with-brute-force\minesweeperandbruteforce\minesweeperandbruteforce.cpp(394): fatal error C1003: error count exceeds 100; stopping compilation

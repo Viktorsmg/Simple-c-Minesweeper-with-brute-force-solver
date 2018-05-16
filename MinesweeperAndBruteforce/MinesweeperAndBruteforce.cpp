@@ -18,9 +18,9 @@
 
 using namespace std;
 
-int gridx, gridy, mines;
+//int gridx, gridy, mines;
 
-int shift[8][2] = { //Instead of doing some awkward if()s for checks around current coords, use a matrix for shifting them
+const int shift[8][2] = { //Instead of doing some awkward if()s for checks around current coords, use a matrix for shifting them
 	{0,1}, {0,-1}, {1,0}, {-1,0}, //Direct neighbour shifts: Right, left, down, up
 	{1,1}, {1,-1}, {-1,1}, {-1,-1} }; //diagonal neighbour shifts
 
@@ -36,21 +36,23 @@ struct pos {
 	pos(int _x, int _y) { x = _x; y = _y; }
 };
 
-vector< vector< tile > > grid;
-vector< pos > flags;
-
+//vector< vector< tile > > grid;
 
 template<typename type>
 bool inIntvl(type num, type min, type max) {
 	return num >= min && num <= max;
 }
 
-bool canShift(int x, int y, int shiftID) {
+bool canShift(int x, int y, int shiftID, int gridx, int gridy) {
 	return inIntvl( x + shift[shiftID][0], 0, gridx-1 ) && inIntvl( y + shift[shiftID][1], 0, gridy-1 );
 }
 
-bool canShift(pos xy, int shiftID) {
-	return canShift(xy.x, xy.y, shiftID);
+bool canShift(pos xy, int shiftID, pos gridxy) {
+	return canShift(xy.x, xy.y, shiftID, gridxy.x, gridxy.y);
+}
+
+bool canShift(pos xy, int shiftID, int gridx, int gridy) {
+	return canShift(xy.x, xy.y, shiftID, gridx, gridy);
 }
 
 ///<summary> Mod that works correctly with negative values.</summary>
@@ -74,8 +76,8 @@ int loopOverflow(int a, pos minmax) {
 
 ///<summary> Places a mine/air in a non-occupied location and returns that location. <para />
 ///Do not use if the air/mine:total tile ratio is close to or higher than 0.5!</summary>
-pos placePos(bool placeType = 1) {
-	int x, y;
+pos placePos(vector< vector< tile > > &grid, bool placeType = 1) {
+	int x, y, gridx = grid.size(), gridy=grid[0].size();
 	x = rand() % gridx; y = rand() % gridy;
 	while (grid[x][y].hasMine == placeType) {
 		x = rand() % gridx; y = rand() % gridy;
@@ -86,17 +88,17 @@ pos placePos(bool placeType = 1) {
 
 ///<summary> Generates by placing mines in non-overlapping locations. <para />
 ///Do not use if the amount of mines is close to or higher than half the amount of total tiles! It will be slow!</summary>
-void genPlaceMines(){
+void genPlaceMines(vector< vector< tile > > &grid, int mines){
 	int i;
 	for (i = 0; i < mines; i++) {
-		placePos(1);
+		placePos(grid, 1);
 	}
 }
 
 ///<summary> Generates by placing air in non-overlapping locations. <para />
 ///Do not use if the amount of airs is close to or higher than half the amount of total tiles! It will be slow!</summary>
-void genPlaceAir() {
-	int i, j;
+void genPlaceAir(vector< vector< tile > > &grid, int mines) {
+	int i, j, gridx = grid.size(), gridy = grid[0].size();
 
 	//Fill the grid with mines instead of air.
 	for (i = 0; i < gridx; i++) {
@@ -108,15 +110,15 @@ void genPlaceAir() {
 	//Calculate amount of and place airs.
 	int airs = gridx * gridy - mines;
 	for (i = 0; i < airs; i++) {
-		placePos(0);
+		placePos(grid, 0);
 	}
 }
 
 ///<summary> Generates using shuffling - moves mines around. Can take a while, based on the iterations. <para />
 ///For example, 1 000 000 iterations took 1.6 seconds.</summary>
-void genShuffle(int shuffleIters){
+void genShuffle(vector< vector< tile > > &grid, int shuffleIters, int mines){
 
-	int i, j;
+	int i, j, gridx = grid.size(), gridy = grid[0].size();
 
 	//Place a line of mines
 	for (i = 0; i < mines; i++) {
@@ -134,7 +136,8 @@ void genShuffle(int shuffleIters){
 }
 
 ///<summary> Clears tile numeration.</summary>
-void clearTileNumeration() {
+void clearTileNumeration(vector< vector< tile > > &grid) {
+	int gridx = grid.size(), gridy = grid[0].size();
 	for (int i = 0; i < gridx; i++) {
 		for (int j = 0; j < gridy; j++) {
 			grid[i][j].nearMines = 0;
@@ -225,14 +228,14 @@ pos findEmptyTile(pos startPos = pos(gridx/2,gridy/2)) {//Search is BFS, to find
 ///Shifts the grid around so that the cursor position always lands on a non-mined tile. <para />
 ///The shifting is done to the tile with the least amount of mines around it when the field is wrapped (tiled).
 ///</summary>
-void shiftGrid(pos cursor) {
-	clearTileNumeration();
-	numerateTiles_looping();
+void shiftGrid(pos cursor, vector< vector< tile > > grid) {
+	clearTileNumeration(grid);
+	numerateTiles_looping(grid);
 
 	pos shiftTo = findEmptyTile(cursor);
 	shiftTo.x -= cursor.x;
 	shiftTo.y -= cursor.y;
-	int i, j;
+	int i, j, gridx = grid.size(), gridy = grid[0].size();
 	vector< vector< tile > > shiftedGrid;
 	shiftedGrid.resize(gridx);
 	for (i = 0; i < gridx; i++) {
@@ -240,7 +243,7 @@ void shiftGrid(pos cursor) {
 	}
 	for (i = 0; i < gridx; i++) {
 		for (j = 0; j < gridy; j++) {
-			shiftedGrid[i][j] = grid[modNeg(i + shiftTo.x,gridx)][modNeg(j + shiftTo.y,gridy)];
+			shiftedGrid[i][j] = grid[modNeg(i + shiftTo.x, gridx)][modNeg(j + shiftTo.y, gridy)];
 		}
 
 	}
@@ -433,7 +436,7 @@ void clearTerminal() {
 int interactiveMode(int printMethod=0) {
 	cout << "Interactive mode - use the w, a, s and d keys to move a cursor around, space to click and q to toggle flags!\nPress any key to start! ";
 
-	bool won=false;
+	bool won=false, firstClick = true;
 	pos cursor(gridx/2,gridy/2);
 	char action = _getch();
 
@@ -486,6 +489,10 @@ int interactiveMode(int printMethod=0) {
 
 		switch (action) {
 			case ' ':
+				if (firstClick) {
+					firstClick = false;
+					shiftGrid(cursor);
+				}
 				discover(cursor);
 				if (grid[cursor.x][cursor.y].hasMine) return -1;
 				break;
@@ -499,6 +506,8 @@ int interactiveMode(int printMethod=0) {
 }
 
 int main(){
+	vector< vector< tile > > grid;
+	int gridx, gridy;
 	srand(5);
 	cout << "Enter grid dimensions: ";
 	cin >> gridx >> gridy;
@@ -523,6 +532,9 @@ int main(){
 	}
 	
 	if (mode == 1) {
+		cout << "How should the grid be displayed?\n 0 - Spaced and with a crosshair\n1 - Unspaced with a highlighted tile\n2 - warped around the cursor\n3 - Warped and with a crosshair\n: ";
+		int drawType;
+		cin >> drawType;
 		int result = interactiveMode();
 		switch (result) {
 			case -1:
